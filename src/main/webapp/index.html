@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Todo App</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; }
+        #todoInput { width: 70%; padding: 10px; }
+        #addTodo { padding: 10px; width: 25%; }
+        #todoList { margin-top: 20px; }
+        .todo { background-color: #f0f0f0; padding: 10px; margin-bottom: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+<h1>Todo List</h1>
+<input type="text" id="todoInput" placeholder="Enter a new todo">
+<button id="addTodo">Add Todo</button>
+<div id="todoList"></div>
+
+<script>
+    document.getElementById('addTodo').addEventListener('click', addTodo);
+    function addTodo() {
+        const todoInput = document.getElementById('todoInput');
+        const todo = todoInput.value.trim();
+        if (todo) {
+            fetch('/api/todos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'todo=' + encodeURIComponent(todo)
+            })
+                .then(() => {
+                    todoInput.value = '';
+                    loadTodos();
+                });
+        }
+    }
+
+    function loadTodos() {
+        fetch('/api/todos')
+            .then(res => res.json())
+            .then(todos => {
+                const todoList = document.getElementById('todoList');
+                todoList.innerHTML = '';
+                todos.forEach(todo => {
+                    const todoElement = document.createElement('div');
+                    todoElement.className = 'todo';
+                    todoElement.textContent = todo;
+                    todoList.appendChild(todoElement);
+                });
+            });
+    }
+
+    loadTodos();
+</script>
+</body>
+</html>
