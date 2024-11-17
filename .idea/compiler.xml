@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="todo-app" />
+        <module name="simple-todo-app" />
       </profile>
     </annotationProcessing>
   </component>
